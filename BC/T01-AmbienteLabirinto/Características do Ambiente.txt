@@ -1,0 +1,9 @@
+Parcialmente observável (o agente não recebe informações de sensores)
+Monoagente
+Cooperativo (não há com quem competir)
+Determinístico
+Episódico (segundo a implementação do agente)
+Estático
+Discreto
+
+Número de estados = 8x8 - 10 posições com paredes = 54 estados
