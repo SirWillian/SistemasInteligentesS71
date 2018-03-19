@@ -3,7 +3,7 @@
  * @author Tacla UTFPR
  * @version 2017-08
  */
-package sistema;
+package problema;
 
 public class Estado {
     /** linha onde se encontra o agente */

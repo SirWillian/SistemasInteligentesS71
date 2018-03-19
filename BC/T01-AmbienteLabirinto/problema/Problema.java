@@ -3,7 +3,7 @@
  *
  * @author Tacla
  */
-package sistema;
+package problema;
 
 import comuns.*;
 
@@ -13,48 +13,23 @@ import comuns.*;
  */
 public class Problema implements PontosCardeais {
 
-    /**
-     * Estado inicial para um problema de busca (linha, coluna)
-     */
-    protected Estado estIni = new Estado(0, 0);
-    /**
-     * Estado objetivo para um problema de busca (linha, coluna)
-     */
-    protected Estado estObj = new Estado(0, 0);
-    /**
-     * Crença do agente sobre o estado do labirinto, i.e. a posição de suas
-     * paredes
-     */
-    protected Labirinto creLab;
-    /**
-     * Crença do agente sobre o máximo de linhas do labirinto
-     */
-    protected int maxLin;
-    /**
-     * Crença do agente sobre o máximo de colunas do labirinto
-     */
-    protected int maxCol;
+    /**Estado inicial para um problema de busca (linha, coluna) */
+    public Estado estIni = new Estado(0, 0);
+    /**Estado objetivo para um problema de busca (linha, coluna) */
+    public Estado estObj = new Estado(0, 0);
+    /**Crença do agente sobre o estado do labirinto, i.e. a posição de suas paredes */
+    public Labirinto crencaLabir;
 
-    /**
-     * O que o agente crê sobre o labirinto
+
+    /**Este método instancia um labirinto - representa o que o agente crê ser
+     * o labirinto. As paredes devem ser colocadas fora desta classe porque este
+     * pacote é utilizado para construir labirintos diferentes.
+     * @param maxLin máximo de linhas do labirinto
+     * @param maxCol máximo de colunas do labirinto
      */
-    public void criarLabirinto() {
-        maxLin = 9;
-        maxCol = 9;
-        creLab = new Labirinto(maxLin, maxCol);
-        creLab.porParedeVertical(0, 1, 0);
-        creLab.porParedeVertical(0, 0, 1);
-        creLab.porParedeVertical(5, 8, 1);
-        creLab.porParedeVertical(5, 5, 2);
-        creLab.porParedeVertical(8, 8, 2);
-        creLab.porParedeHorizontal(4, 7, 0);
-        creLab.porParedeHorizontal(7, 7, 1);
-        creLab.porParedeHorizontal(3, 5, 2);
-        creLab.porParedeHorizontal(3, 5, 3);
-        creLab.porParedeHorizontal(7, 7, 3);
-        creLab.porParedeVertical(6, 7, 4);
-        creLab.porParedeVertical(5, 6, 5);
-        creLab.porParedeVertical(5, 7, 7);
+    public void criarLabirinto(int maxLin, int maxCol) {
+        this.crencaLabir = new Labirinto(maxLin, maxCol);
+       
     }
 
     /**
@@ -62,7 +37,7 @@ public class Problema implements PontosCardeais {
      * @param lin
      * @param col
      */
-    protected void defEstIni(int lin, int col) {
+    public void defEstIni(int lin, int col) {
         estIni.setLinCol(lin, col);
     }
 
@@ -71,7 +46,7 @@ public class Problema implements PontosCardeais {
      * @param lin
      * @param col
      */
-    protected void defEstObj(int lin, int col) {
+    public void defEstObj(int lin, int col) {
         estObj.setLinCol(lin, col);
     }
 
@@ -82,7 +57,7 @@ public class Problema implements PontosCardeais {
      * @param acao
      * @return 
      */
-    protected Estado suc(Estado est, int acao) {
+    public Estado suc(Estado est, int acao) {
         int lin = est.getLin();
         int col = est.getCol();
 
@@ -117,12 +92,12 @@ public class Problema implements PontosCardeais {
                 break;
         }
         // verifica se está fora do grid
-        if (col < 0 || col >= maxCol || lin < 0 || lin >= maxLin) {
+        if (col < 0 || col >= crencaLabir.getMaxCol() || crencaLabir.getMaxLin() < 0 || lin >= crencaLabir.getMaxLin()) {
             lin = est.getLin();
             col = est.getCol();  // fica na posicao atual
         }
         // verifica se bateu em algum obstaculo
-        if (creLab.parede[lin][col] == 1) {
+        if (crencaLabir.parede[lin][col] == 1) {
             lin = est.getLin();
             col = est.getCol();  // fica na posicao atual
         }
@@ -140,7 +115,7 @@ public class Problema implements PontosCardeais {
      * @param est
      * @return 
      */
-    protected int[] acoesPossiveis(Estado est) {
+    public int[] acoesPossiveis(Estado est) {
         int acoes[] = new int[8];
 
         // testa se pode ir para o N, NE ou NO sem sair do limite do labirinto
@@ -148,11 +123,11 @@ public class Problema implements PontosCardeais {
             acoes[0] = acoes[1] = acoes[7] = -1;
         }
         // testa se pode ir para o NE, L ou SE sem sair do limite do labirinto
-        if (est.getCol() == (maxCol - 1)) {
+        if (est.getCol() == (crencaLabir.getMaxCol() - 1)) {
             acoes[1] = acoes[2] = acoes[3] = -1;
         }
         // testa se pode ir para o SE, S ou SO sem sair do limite do labirinto
-        if (est.getLin() == (maxLin - 1)) {
+        if (est.getLin() == (crencaLabir.getMaxLin() - 1)) {
             acoes[3] = acoes[4] = acoes[5] = -1;
         }
         // testa se pode ir para o SO, O ou NO sem sair do limite do labirinto
@@ -164,42 +139,42 @@ public class Problema implements PontosCardeais {
         int c = est.getCol();
 
         // testa se ha parede na direcao N
-        if (acoes[0] != -1 && creLab.parede[l - 1][c] == 1) {
+        if (acoes[0] != -1 && crencaLabir.parede[l - 1][c] == 1) {
             acoes[0] = -1;
         }
 
         // testa se ha parede na direcao NE
-        if (acoes[1] != -1 && creLab.parede[l - 1][c + 1] == 1) {
+        if (acoes[1] != -1 && crencaLabir.parede[l - 1][c + 1] == 1) {
             acoes[1] = -1;
         }
 
         // testa se ha parede na direcao l
-        if (acoes[2] != -1 && creLab.parede[l][c + 1] == 1) {
+        if (acoes[2] != -1 && crencaLabir.parede[l][c + 1] == 1) {
             acoes[2] = -1;
         }
 
         // testa se ha parede na direcao SE
-        if (acoes[3] != -1 && creLab.parede[l + 1][c + 1] == 1) {
+        if (acoes[3] != -1 && crencaLabir.parede[l + 1][c + 1] == 1) {
             acoes[3] = -1;
         }
 
         // testa se ha parede na direcao S
-        if (acoes[4] != -1 && creLab.parede[l + 1][c] == 1) {
+        if (acoes[4] != -1 && crencaLabir.parede[l + 1][c] == 1) {
             acoes[4] = -1;
         }
 
         // testa se ha parede na direcao SO
-        if (acoes[5] != -1 && creLab.parede[l + 1][c - 1] == 1) {
+        if (acoes[5] != -1 && crencaLabir.parede[l + 1][c - 1] == 1) {
             acoes[5] = -1;
         }
 
         // testa se ha parede na direcao O
-        if (acoes[6] != -1 && creLab.parede[l][c - 1] == 1) {
+        if (acoes[6] != -1 && crencaLabir.parede[l][c - 1] == 1) {
             acoes[6] = -1;
         }
 
         // testa se ha parede na direcao NO
-        if (acoes[7] != -1 && creLab.parede[l - 1][c - 1] == 1) {
+        if (acoes[7] != -1 && crencaLabir.parede[l - 1][c - 1] == 1) {
             acoes[7] = -1;
         }
         return acoes;
@@ -212,7 +187,7 @@ public class Problema implements PontosCardeais {
      * @param est2
      * @return 
      */
-    protected float obterCustoAcao(Estado est1, int acao, Estado est2) {
+    public float obterCustoAcao(Estado est1, int acao, Estado est2) {
         if (acao == N || acao == L || acao == O || acao == S) {
             return (float) 1;
         } else {
@@ -225,7 +200,7 @@ public class Problema implements PontosCardeais {
      * @param estAtu estado atual
      * @return true se o estado atual for igual ao estado objetivo
      */
-    protected boolean testeObjetivo(Estado estAtu) {
+    public boolean testeObjetivo(Estado estAtu) {
         return this.estObj.igualAo(estAtu);
     }
 }

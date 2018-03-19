@@ -19,7 +19,7 @@ is divided into following sections:
   - cleanup
 
         -->
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="T01-AmbienteLabirinto-impl">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" basedir=".." default="default" name="T02-FormulacaoProblemaBusca-impl">
     <fail message="Please build using Ant 1.8.0 or higher.">
         <condition>
             <not>
@@ -125,11 +125,11 @@ is divided into following sections:
         </condition>
         <condition property="have.sources">
             <or>
-                <available file="${src.dir}"/>
                 <available file="${src.ambiente.dir}"/>
                 <available file="${src.arvore.dir}"/>
                 <available file="${src.comuns.dir}"/>
                 <available file="${src.problema.dir}"/>
+                <available file="${src.src.dir}"/>
             </or>
         </condition>
         <condition property="netbeans.home+have.tests">
@@ -232,11 +232,11 @@ is divided into following sections:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="-pre-init,-init-private,-init-user,-init-project,-do-init" name="-init-check">
-        <fail unless="src.dir">Must set src.dir</fail>
         <fail unless="src.ambiente.dir">Must set src.ambiente.dir</fail>
         <fail unless="src.arvore.dir">Must set src.arvore.dir</fail>
         <fail unless="src.comuns.dir">Must set src.comuns.dir</fail>
         <fail unless="src.problema.dir">Must set src.problema.dir</fail>
+        <fail unless="src.src.dir">Must set src.src.dir</fail>
         <fail unless="build.dir">Must set build.dir</fail>
         <fail unless="dist.dir">Must set dist.dir</fail>
         <fail unless="build.classes.dir">Must set build.classes.dir</fail>
@@ -257,7 +257,7 @@ is divided into following sections:
     </target>
     <target depends="-init-ap-cmdline-properties" if="ap.supported.internal" name="-init-macrodef-javac-with-processors">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${src.dir}:${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}" name="srcdir"/>
+            <attribute default="${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${src.src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${javac.processorpath}" name="processorpath"/>
@@ -298,7 +298,7 @@ is divided into following sections:
     </target>
     <target depends="-init-ap-cmdline-properties" name="-init-macrodef-javac-without-processors" unless="ap.supported.internal">
         <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${src.dir}:${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}" name="srcdir"/>
+            <attribute default="${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${src.src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <attribute default="${javac.processorpath}" name="processorpath"/>
@@ -331,7 +331,7 @@ is divided into following sections:
     </target>
     <target depends="-init-macrodef-javac-with-processors,-init-macrodef-javac-without-processors" name="-init-macrodef-javac">
         <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${src.dir}:${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}" name="srcdir"/>
+            <attribute default="${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${src.src.dir}" name="srcdir"/>
             <attribute default="${build.classes.dir}" name="destdir"/>
             <attribute default="${javac.classpath}" name="classpath"/>
             <sequential>
@@ -448,7 +448,7 @@ is divided into following sections:
                 </condition>
                 <union id="test.set"/>
                 <taskdef classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}" name="testng"/>
-                <testng classfilesetref="test.set" failureProperty="tests.failed" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="T01-AmbienteLabirinto" testname="TestNG tests" workingDir="${work.dir}">
+                <testng classfilesetref="test.set" failureProperty="tests.failed" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="T02-FormulacaoProblemaBusca" testname="TestNG tests" workingDir="${work.dir}">
                     <xmlfileset dir="${build.test.classes.dir}" includes="@{testincludes}"/>
                     <propertyset>
                         <propertyref prefix="test-sys-prop."/>
@@ -596,7 +596,7 @@ is divided into following sections:
                 <condition else="-testclass @{testClass}" property="test.class.or.method" value="-methods @{testClass}.@{testMethod}">
                     <isset property="test.method"/>
                 </condition>
-                <condition else="-suitename T01-AmbienteLabirinto -testname @{testClass} ${test.class.or.method}" property="testng.cmd.args" value="@{testClass}">
+                <condition else="-suitename T02-FormulacaoProblemaBusca -testname @{testClass} ${test.class.or.method}" property="testng.cmd.args" value="@{testClass}">
                     <matches pattern=".*\.xml" string="@{testClass}"/>
                 </condition>
                 <delete dir="${build.test.results.dir}" quiet="true"/>
@@ -888,7 +888,7 @@ is divided into following sections:
         <delete file="${built-jar.properties}" quiet="true"/>
     </target>
     <target if="already.built.jar.${basedir}" name="-warn-already-built-jar">
-        <echo level="warn" message="Cycle detected: T01-AmbienteLabirinto was already built"/>
+        <echo level="warn" message="Cycle detected: T02-FormulacaoProblemaBusca was already built"/>
     </target>
     <target depends="init,-deps-jar-init" name="deps-jar" unless="no.deps">
         <mkdir dir="${build.dir}"/>
@@ -919,16 +919,16 @@ is divided into following sections:
                 <include name="*"/>
             </dirset>
         </pathconvert>
-        <j2seproject3:depend srcdir="${src.dir}:${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${build.generated.subdirs}"/>
+        <j2seproject3:depend srcdir="${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${src.src.dir}:${build.generated.subdirs}"/>
     </target>
     <target depends="init,deps-jar,-pre-pre-compile,-pre-compile, -copy-persistence-xml,-compile-depend" if="have.sources" name="-do-compile">
         <j2seproject3:javac gensrcdir="${build.generated.sources.dir}"/>
         <copy todir="${build.classes.dir}">
-            <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.ambiente.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.arvore.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.comuns.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
             <fileset dir="${src.problema.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+            <fileset dir="${src.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
     </target>
     <target if="has.persistence.xml" name="-copy-persistence-xml">
@@ -949,7 +949,7 @@ is divided into following sections:
     <target depends="init,deps-jar,-pre-pre-compile" name="-do-compile-single">
         <fail unless="javac.includes">Must select some files in the IDE or set javac.includes</fail>
         <j2seproject3:force-recompile/>
-        <j2seproject3:javac excludes="" gensrcdir="${build.generated.sources.dir}" includes="${javac.includes}" sourcepath="${src.dir}:${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}"/>
+        <j2seproject3:javac excludes="" gensrcdir="${build.generated.sources.dir}" includes="${javac.includes}" sourcepath="${src.ambiente.dir}:${src.arvore.dir}:${src.comuns.dir}:${src.problema.dir}:${src.src.dir}"/>
     </target>
     <target name="-post-compile-single">
         <!-- Empty placeholder for easier customization. -->
@@ -1215,9 +1215,6 @@ is divided into following sections:
             <classpath>
                 <path path="${javac.classpath}"/>
             </classpath>
-            <fileset dir="${src.dir}" excludes="${bug5101868workaround},${excludes}" includes="${includes}">
-                <filename name="**/*.java"/>
-            </fileset>
             <fileset dir="${src.ambiente.dir}" excludes="${bug5101868workaround},${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
@@ -1230,6 +1227,9 @@ is divided into following sections:
             <fileset dir="${src.problema.dir}" excludes="${bug5101868workaround},${excludes}" includes="${includes}">
                 <filename name="**/*.java"/>
             </fileset>
+            <fileset dir="${src.src.dir}" excludes="${bug5101868workaround},${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
             <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
                 <include name="**/*.java"/>
                 <exclude name="*.java"/>
@@ -1237,9 +1237,6 @@ is divided into following sections:
             <arg line="${javadoc.endorsed.classpath.cmd.line.arg}"/>
         </javadoc>
         <copy todir="${dist.javadoc.dir}">
-            <fileset dir="${src.dir}" excludes="${excludes}" includes="${includes}">
-                <filename name="**/doc-files/**"/>
-            </fileset>
             <fileset dir="${src.ambiente.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/doc-files/**"/>
             </fileset>
@@ -1250,6 +1247,9 @@ is divided into following sections:
                 <filename name="**/doc-files/**"/>
             </fileset>
             <fileset dir="${src.problema.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/doc-files/**"/>
+            </fileset>
+            <fileset dir="${src.src.dir}" excludes="${excludes}" includes="${includes}">
                 <filename name="**/doc-files/**"/>
             </fileset>
             <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
@@ -1397,7 +1397,7 @@ is divided into following sections:
         <delete file="${built-clean.properties}" quiet="true"/>
     </target>
     <target if="already.built.clean.${basedir}" name="-warn-already-built-clean">
-        <echo level="warn" message="Cycle detected: T01-AmbienteLabirinto was already built"/>
+        <echo level="warn" message="Cycle detected: T02-FormulacaoProblemaBusca was already built"/>
     </target>
     <target depends="init,-deps-clean-init" name="deps-clean" unless="no.deps">
         <mkdir dir="${build.dir}"/>

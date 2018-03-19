@@ -3,13 +3,13 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>T01-AmbienteLabirinto</name>
+            <name>T02-FormulacaoProblemaBusca</name>
             <source-roots>
-                <root id="src.dir"/>
                 <root id="src.ambiente.dir"/>
                 <root id="src.arvore.dir"/>
                 <root id="src.comuns.dir"/>
                 <root id="src.problema.dir"/>
+                <root id="src.src.dir"/>
             </source-roots>
             <test-roots/>
         </data>

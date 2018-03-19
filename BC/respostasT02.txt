@@ -1,4 +1,0 @@
-3.1. São possíveis infinitos planos de ações, dado que o grafo de estados do problema possui ciclos.
-3.2. O espaço de estados pode ser construído a partir de um grafo onde os vértices são as posições do labirinto e, portando, o espaço de estado tem tamanho 81 (total de posições no labirinto) - 28 (posições ocupadas por obstáculos) = 53 estados.
-3.3. O agende deve ter o conhecimento da localização das paredes, já que o ambiente é estático, a crença do agente é igual ao modelo do labirinto.
-3.4. Não. O agente pode não ser capaz de atingir seu objetivo. Se o ambiente for dinâmico ou também se houverem erros na atualização do estado do ambiente.

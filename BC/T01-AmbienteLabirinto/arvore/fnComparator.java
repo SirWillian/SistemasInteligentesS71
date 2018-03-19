@@ -1,4 +1,4 @@
-package busca;
+package arvore;
 import java.util.Comparator;
 
 /**

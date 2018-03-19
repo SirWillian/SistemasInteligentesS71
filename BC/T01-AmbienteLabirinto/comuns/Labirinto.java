@@ -22,6 +22,13 @@ public class Labirinto {
         parede = new int[maxCol][maxLin];
     }
     
+    public int getMaxLin() {
+        return this.maxLin;
+    }
+    public int getMaxCol() {
+        return this.maxLin;
+    }
+    
    /** Constroi parede horizontal da coluna inicial até a final na linha indicada.
     * @param ini: coluna inicial entre 0 e número máximo de colunas - 1
     * @param fim: coluna final (deve ser maior que coluna inicial)

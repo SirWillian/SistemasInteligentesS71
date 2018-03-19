@@ -1,11 +1,11 @@
 /*
  * Implementa nó de árvore de busca. 
  */
-package busca;
+package arvore;
 
 import java.util.ArrayList;
 import java.util.List;
-import sistema.Estado;
+import problema.Estado;
 
 /**
  *
