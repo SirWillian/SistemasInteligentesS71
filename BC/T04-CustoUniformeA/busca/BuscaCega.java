@@ -14,34 +14,40 @@ public class BuscaCega
     public BuscaCega(Agente agnt)
     {
         this.agente=agnt;
-        this.arvore=new TreeNode(arvore);
+        this.arvore=new TreeNode(this.arvore);
         this.arvore.setState(agnt.estAtu);
         this.arvore.setGnHn(0, 0);
-        this.fronteira.add(arvore);
+        this.fronteira.add(this.arvore);
     }
     
     public int[] gerarSolucao()
     {
         //Método criado para ser sobrescrito pelos filhos
-        return new int[1];
+        return null;
     }
     
     public void addNaFronteira(TreeNode node)
     {
         boolean isInFronteira=false;
-        for(TreeNode each : fronteira)
+        TreeNode replaceNode=new TreeNode(node);
+        int index=0;
+        for(TreeNode each : this.fronteira)
         {
+            if(node.getFn() > each.getFn())
+                index++;
             if(node.getState()==each.getState())
             {
                 isInFronteira=true;
+                replaceNode=each;
                 break;
             }
         }
         if(isInFronteira)
         {
-            //replace "each" with "node"
+            if(node.getFn() < replaceNode.getFn())
+                this.fronteira.set(this.fronteira.indexOf(replaceNode), node);
         }
         else
-            //procura o indice e insere
+            this.fronteira.add(index, node);
     }
 }

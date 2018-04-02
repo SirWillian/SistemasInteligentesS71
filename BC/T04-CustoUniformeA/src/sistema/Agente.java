@@ -3,6 +3,7 @@ package sistema;
 import ambiente.*;
 import problema.*;
 import comuns.*;
+import busca.*;
 import static comuns.PontosCardeais.*;
 
 /**
@@ -14,7 +15,9 @@ public class Agente implements PontosCardeais {
     Model model;
     public Problema prob;
     public Estado estAtu; // guarda o estado atual (posição atual do agente)
-    int plan[]={N,N,N,NE,L,L,L,L,NE,NE,L};
+    BuscaCega busca;
+    int plan[];
+    //int plan[]={N,N,N,NE,L,L,L,L,NE,NE,L};
     double custo;
     static int ct = -1;
            
@@ -41,6 +44,7 @@ public class Agente implements PontosCardeais {
         prob.defEstObj(2, 8);
         this.estAtu = prob.estIni;
         this.custo = 0;
+        this.busca = new BuscaAStar(this, 0);
     }
     
     /**Escolhe qual ação (UMA E SOMENTE UMA) será executada em um ciclo de raciocínio
@@ -48,6 +52,8 @@ public class Agente implements PontosCardeais {
      */
     public int deliberar() {
         ct++;
+        if(ct==0)
+            plan=this.busca.gerarSolucao();
         int ap[];
         ap = prob.acoesPossiveis(estAtu);
         // nao atingiu objetivo e ha acoesPossiveis a serem executadas no plano

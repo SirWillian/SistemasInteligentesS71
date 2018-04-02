@@ -23,7 +23,7 @@ public class BuscaAStar extends BuscaCega
         while(true)
         {
             if(this.fronteira.isEmpty())
-                return new int[1]; //Não achou nada
+                return null; //Não achou nada
             else
             {
                 node=this.fronteira.remove(0); //"Pop" da fronteira
@@ -42,20 +42,35 @@ public class BuscaAStar extends BuscaCega
                         tmp.setState(this.agente.prob.suc(node.getState(), i));
                         tmp.setGn(node.getGn()+this.agente.prob.obterCustoAcao(node.getState(), i, tmp.getState()));
                         
-                        int distanciaX = Math.abs(node.getState().getCol()-tmp.getState().getCol());
-                        int distanciaY = Math.abs(node.getState().getLin()-tmp.getState().getLin());
+                        int distanciaX = Math.abs(this.agente.prob.estObj.getCol()-tmp.getState().getCol());
+                        int distanciaY = Math.abs(this.agente.prob.estObj.getLin()-tmp.getState().getLin());
                         if(heuristica==0)
                             tmp.setHn((float)Math.sqrt(distanciaX*distanciaX + distanciaY*distanciaY));
                         else
                             tmp.setHn(distanciaX+distanciaY);
                         
-                        //fazer check de já explorado
-                        
-                        //addNaFronteira(tmp);
+                        boolean isExplorado=false;
+                        for(TreeNode each : explorados)
+                        {
+                            if(tmp.getState()==each.getState())
+                            {
+                                isExplorado=true;
+                                break;
+                            }
+                        }
+                        if(!isExplorado)
+                            addNaFronteira(tmp);
                     }
                 }
             }
         }
-        //Remonta solução a partir do break
+        int[] solucao = new int[node.getDepth()];
+        //Percorre de baixo pra cima na árvore
+        while(node!=this.arvore)
+        {
+            solucao[node.getDepth()-1]=node.getAction();
+            node=node.getParent();
+        }
+        return solucao; //temporario
     }
 }
