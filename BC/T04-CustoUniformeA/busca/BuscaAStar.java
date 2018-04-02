@@ -38,6 +38,7 @@ public class BuscaAStar extends BuscaCega
                     if(ap[i]!=-1)
                     {
                         TreeNode tmp = node.addChild();
+                        this.agente.treeSize++;
                         tmp.setAction(i);
                         tmp.setState(this.agente.prob.suc(node.getState(), i));
                         tmp.setGn(node.getGn()+this.agente.prob.obterCustoAcao(node.getState(), i, tmp.getState()));
@@ -71,6 +72,7 @@ public class BuscaAStar extends BuscaCega
             solucao[node.getDepth()-1]=node.getAction();
             node=node.getParent();
         }
-        return solucao; //temporario
+        //this.arvore.printSubTree();
+        return solucao;
     }
 }

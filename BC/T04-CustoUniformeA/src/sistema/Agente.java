@@ -17,6 +17,7 @@ public class Agente implements PontosCardeais {
     public Estado estAtu; // guarda o estado atual (posição atual do agente)
     BuscaCega busca;
     int plan[];
+    public int treeSize=1, ct_ja_explorados=0, ct_descartados_front=0;
     //int plan[]={N,N,N,NE,L,L,L,L,NE,NE,L};
     double custo;
     static int ct = -1;
@@ -83,7 +84,10 @@ public class Agente implements PontosCardeais {
                       
         }
         else
+        {
+            System.out.println("Tamanho da árvore: " + treeSize);
             return (-1);
+        }
         
         return 1;
     }
