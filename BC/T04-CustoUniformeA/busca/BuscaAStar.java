@@ -33,6 +33,8 @@ public class BuscaAStar extends BuscaCega
                 
                 //Para cada ação possível, adiciona um nó na árvore de busca
                 ap=this.agente.prob.acoesPossiveis(node.getState());
+                int count_max=0;
+                int count_des=0;
                 for (int i=0; i<ap.length; i++)
                 {
                     if(ap[i]!=-1)
@@ -57,13 +59,22 @@ public class BuscaAStar extends BuscaCega
                             {
                                 isExplorado=true;
                                 this.agente.ct_ja_explorados++;
+                                count_max++;
                                 break;
                             }
                         }
                         if(!isExplorado)
+                        {
                             addNaFronteira(tmp);
+                            count_des++;
+                        }
+
                     }
                 }
+                if(count_max > this.agente.max_explorados)          //contadores para a complexidade espacial
+                    this.agente.max_explorados = count_max;
+                if(count_des > this.agente.max_descartados)
+                    this.agente.max_descartados = count_des;
             }
         }
         int[] solucao = new int[node.getDepth()];

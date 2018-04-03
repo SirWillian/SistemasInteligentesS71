@@ -20,6 +20,7 @@ public class Agente implements PontosCardeais {
     int metodo_busca=0;
     int plan[];
     public int treeSize=1, ct_ja_explorados=0, ct_descartados_front=0;
+    public int max_explorados=0, max_descartados=0;
     double custo;
     static int ct = -1;
            
@@ -81,8 +82,7 @@ public class Agente implements PontosCardeais {
                    System.out.print(acao[i]+" ");
            }
 
-
-           executarIr(plan[ct]);
+            executarIr(plan[ct]);
            
            // atualiza custo
            if (plan[ct] % 2 == 0 ) // acoes pares = N, L, S, O
@@ -103,8 +103,11 @@ public class Agente implements PontosCardeais {
             String str=metodo_busca==0 ? "A* com distância euclidiana" : (metodo_busca==1 ? "A* com distância de Chebyshev" : "Custo Uniforme");
             System.out.println("Método de busca: " + str);
             System.out.println("Tamanho da árvore: " + treeSize);
-            System.out.println("Nós descartados pois já tinham sido explorados: " + ct_ja_explorados);
-            System.out.println("Nós descartados na fronteira: " + ct_descartados_front);
+            System.out.println("Complexidade Temporal:");
+            System.out.println("Nós descartados pois já tinham sido explorados: " + ct_ja_explorados); //não inseridos na fronteiro pois ja explorados
+            System.out.println("Nós descartados0 na fronteira: " + ct_descartados_front);               //substituidos na fronteira
+            System.out.println("Complexidade Espacial:");
+            System.out.println("Valor máximo ct_ja_explorados/ct_descartados_front: " + max_explorados + ", " + max_descartados);
             System.out.print("Solução: ");
             for(int i=0; i<plan.length; i++)
             {
@@ -162,5 +165,3 @@ public class Agente implements PontosCardeais {
         return new Estado(pos[0], pos[1]);
     }
 }
-    
-
