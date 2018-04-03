@@ -40,14 +40,15 @@ public class BuscaCustoUniforme extends BuscaCega
                         this.agente.treeSize++;
                         tmp.setAction(i);
                         tmp.setState(this.agente.prob.suc(node.getState(), i));
-                        tmp.setGn(node.getGn()+this.agente.prob.obterCustoAcao(node.getState(), i, tmp.getState()));
+                        tmp.setGnHn(node.getGn()+this.agente.prob.obterCustoAcao(node.getState(), i, tmp.getState()),0);
 
                         boolean isExplorado=false;
                         for(TreeNode each : explorados)
                         {
-                            if(tmp.getState()==each.getState())
+                            if(tmp.getState().igualAo(each.getState()))
                             {
                                 isExplorado=true;
+                                this.agente.ct_ja_explorados++;
                                 break;
                             }
                         }

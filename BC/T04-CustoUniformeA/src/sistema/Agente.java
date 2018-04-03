@@ -5,6 +5,7 @@ import problema.*;
 import comuns.*;
 import busca.*;
 import static comuns.PontosCardeais.*;
+import java.util.Random;
 
 /**
  *
@@ -16,9 +17,9 @@ public class Agente implements PontosCardeais {
     public Problema prob;
     public Estado estAtu; // guarda o estado atual (posição atual do agente)
     BuscaCega busca;
+    int metodo_busca=0;
     int plan[];
     public int treeSize=1, ct_ja_explorados=0, ct_descartados_front=0;
-    //int plan[]={N,N,N,NE,L,L,L,L,NE,NE,L};
     double custo;
     static int ct = -1;
            
@@ -45,7 +46,6 @@ public class Agente implements PontosCardeais {
         prob.defEstObj(2, 8);
         this.estAtu = prob.estIni;
         this.custo = 0;
-        this.busca = new BuscaAStar(this, 0);
     }
     
     /**Escolhe qual ação (UMA E SOMENTE UMA) será executada em um ciclo de raciocínio
@@ -54,7 +54,22 @@ public class Agente implements PontosCardeais {
     public int deliberar() {
         ct++;
         if(ct==0)
+        {
+            Random rand = new Random();
+            metodo_busca=rand.nextInt(3); //rand()%3
+            switch(metodo_busca){
+                case 0:
+                    busca = new BuscaAStar(this, 0);
+                    break;
+                case 1:
+                    busca = new BuscaAStar(this, 1);
+                    break;
+                case 2:
+                    busca = new BuscaCustoUniforme(this);
+                    break;
+            }
             plan=this.busca.gerarSolucao();
+        }
         int ap[];
         ap = prob.acoesPossiveis(estAtu);
         // nao atingiu objetivo e ha acoesPossiveis a serem executadas no plano
@@ -85,7 +100,45 @@ public class Agente implements PontosCardeais {
         }
         else
         {
+            String str=metodo_busca==0 ? "A* com distância euclidiana" : (metodo_busca==1 ? "A* com distância de Chebyshev" : "Custo Uniforme");
+            System.out.println("Método de busca: " + str);
             System.out.println("Tamanho da árvore: " + treeSize);
+            System.out.println("Nós descartados pois já tinham sido explorados: " + ct_ja_explorados);
+            System.out.println("Nós descartados na fronteira: " + ct_descartados_front);
+            System.out.print("Solução: ");
+            for(int i=0; i<plan.length; i++)
+            {
+                switch(plan[i])
+                {
+                    case N:
+                        System.out.print("N ");
+                        break;
+                    case NE:
+                        System.out.print("NE ");
+                        break;
+                    case L:
+                        System.out.print("E ");
+                        break;
+                    case SE:
+                        System.out.print("SE ");
+                        break;
+                    case S:
+                        System.out.print("S ");
+                        break;
+                    case SO:
+                        System.out.print("SO ");
+                        break;
+                    case O:
+                        System.out.print("O ");
+                        break;
+                    case NO:
+                        System.out.print("NO ");
+                        break;
+                    
+                }
+            }
+            System.out.println("");
+            System.out.println("Custo da solução: " + custo);
             return (-1);
         }
         

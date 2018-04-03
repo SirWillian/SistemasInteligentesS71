@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BuscaAStar extends BuscaCega
 {
-    private int heuristica; //Heuristica 0 == Distância em linha reta; Heurística 1 == Distância de Manhattan
+    private int heuristica; //Heuristica 0 == Distância em linha reta; Heurística 1 == Distância de Chebyshev
     public BuscaAStar(Agente agnt, int h)
     {
         super(agnt);
@@ -48,14 +48,15 @@ public class BuscaAStar extends BuscaCega
                         if(heuristica==0)
                             tmp.setHn((float)Math.sqrt(distanciaX*distanciaX + distanciaY*distanciaY));
                         else
-                            tmp.setHn(distanciaX+distanciaY);
+                            tmp.setHn(Math.max(distanciaX, distanciaY));
                         
                         boolean isExplorado=false;
                         for(TreeNode each : explorados)
                         {
-                            if(tmp.getState()==each.getState())
+                            if(tmp.getState().igualAo(each.getState()))
                             {
                                 isExplorado=true;
+                                this.agente.ct_ja_explorados++;
                                 break;
                             }
                         }

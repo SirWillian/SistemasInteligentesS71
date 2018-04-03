@@ -8,7 +8,6 @@ public class BuscaCega
 {
     protected TreeNode arvore;
     protected List<TreeNode> fronteira = new ArrayList<>();
-    protected fnComparator comparador;
     protected Agente agente;
     
     public BuscaCega(Agente agnt)
@@ -35,9 +34,10 @@ public class BuscaCega
         {
             if(node.getFn() > each.getFn())
                 index++;
-            if(node.getState()==each.getState())
+            if(node.getState().igualAo(each.getState()))
             {
                 isInFronteira=true;
+                this.agente.ct_descartados_front++;
                 replaceNode=each;
                 break;
             }
