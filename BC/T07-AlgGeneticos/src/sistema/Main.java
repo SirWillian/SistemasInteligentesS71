@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author WILLIAN
+ * @author WILLIAN e Terumi
  */
 public class Main {
     boolean first_print=true;
@@ -27,7 +27,16 @@ public class Main {
         for(int execucoes=0; execucoes<1000; execucoes++)
         {
             MochilaSolver solver = new MochilaSolver(mochila, 113, 42);
+            solver.crossover();
+            solver.mutation();
             solver.evolve();
+
+            best_fitness = solver.getBestMochila().fitness;
+            int[] par = {execucoes, best_fitness};
+            solver.genFit.add(par);
+
+            break;
+            /*
             tmp_best=solver.getBestMochila();
             if(tmp_best.fitness > best_fitness){
                 best_mochilas.clear();
@@ -36,6 +45,7 @@ public class Main {
             }
             else if (tmp_best.fitness==best_fitness)
                 best_mochilas.add(tmp_best);
+            */
         }
         
     }
@@ -92,4 +102,5 @@ public class Main {
             }
         }
     }
+
 }
