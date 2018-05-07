@@ -1,6 +1,6 @@
 /** Mochila contendo itens
  * Indivíduo do AG resolvendo o problema da mochila
- * @author WILLIAN
+ * @author WILLIAN e Terumi
  */
 package mochila;
 
@@ -19,4 +19,17 @@ public class Mochila {
         this.fitness=0;
         this.n_itens=0;
     }
+
+    public void calculaFitness(MochilaItems m)
+    {
+        for(int index = 0; index < n_itens; index++)
+        {
+            this.fitness = this.itens[index] * m.valores[index];
+            this.peso = this.itens[index] * m.pesos[index];
+        }
+
+        this.valor = fitness; //Enquanto não há penalização
+
+    }
+
 }
