@@ -19,17 +19,45 @@ public class Mochila {
         this.fitness=0;
         this.n_itens=0;
     }
+    
+    public Mochila(Mochila m)
+    {
+        this.itens = new int[m.itens.length];
+        for(int i=0; i<m.itens.length; i++)
+            this.itens[i]=m.itens[i];
+        this.valor=m.valor;
+        this.peso=m.peso;
+        this.fitness=m.fitness;
+        this.n_itens=m.n_itens;
+    }
 
     public void calculaFitness(MochilaItems m)
     {
-        for(int index = 0; index < n_itens; index++)
+        this.valor=0;
+        this.peso=0;
+        this.n_itens=0;
+        
+        for(int index = 0; index < m.n_elementos; index++)
         {
-            this.fitness = this.itens[index] * m.valores[index];
-            this.peso = this.itens[index] * m.pesos[index];
+            this.valor += this.itens[index] * m.valores[index];
+            this.peso += this.itens[index] * m.pesos[index];
+            if(this.itens[index]==1)
+                this.n_itens++;
         }
 
-        this.valor = fitness; //Enquanto não há penalização
-
+        this.fitness = valor; //Enquanto não há penalização
     }
-
+    public void printMochila(MochilaItems m)
+    {
+        System.out.println("Mochila  peso  valor");
+        System.out.println("---------------------");
+        for(int i=0; i<itens.length; i++)
+            if(itens[i]==1)
+                System.out.println("item["+i+"]   " + m.pesos[i] + "     " + m.valores[i]);
+        System.out.println("---------------------");
+        System.out.println("Mochila com " + n_itens + "ITENS");
+        System.out.println("Mochila com " + peso + "KG");
+        System.out.println("Mochila com " + valor + "VALOR");
+        System.out.println("---------------------");
+    }
 }

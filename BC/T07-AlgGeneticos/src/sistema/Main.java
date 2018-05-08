@@ -24,30 +24,23 @@ public class Main {
         int best_fitness=0;
         Mochila tmp_best;
         
-        for(int execucoes=0; execucoes<1000; execucoes++)
+        for(int execucoes=0; execucoes<10; execucoes++)
         {
             MochilaSolver solver = new MochilaSolver(mochila, 113, 42);
-            solver.crossover();
-            solver.mutation();
             solver.evolve();
 
-            best_fitness = solver.getBestMochila().fitness;
-            int[] par = {execucoes, best_fitness};
-            solver.genFit.add(par);
-
-            break;
-            /*
             tmp_best=solver.getBestMochila();
+            tmp_best.printMochila(mochila);
             if(tmp_best.fitness > best_fitness){
                 best_mochilas.clear();
                 best_mochilas.add(tmp_best);
                 best_fitness=tmp_best.fitness;
             }
             else if (tmp_best.fitness==best_fitness)
+                //Checar se a mochila é repetida
                 best_mochilas.add(tmp_best);
-            */
         }
-        
+        //Escrever no arquivo
     }
     
     public void escreveEmArquivo(int[] parametros, String string){

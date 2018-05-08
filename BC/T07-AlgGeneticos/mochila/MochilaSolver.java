@@ -5,6 +5,7 @@
 package mochila;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -92,8 +93,8 @@ public class MochilaSolver {
                 ++index;
                 soma += p_selecao[index];
             }
-
-            filhos.add(individuos.get(index));
+            Mochila new_filho = new Mochila(individuos.get(i));
+            filhos.add(new_filho);
 
         }
         /*Print teste filhos*/
@@ -164,9 +165,9 @@ public class MochilaSolver {
                 //System.out.println("rando: " + sorteio);
                 if(sorteio <= pMUT*100) //Se o numero sorteado estiver entre 0 e 5
                 {
-                    System.out.print("Mutação em ");
+                    /*System.out.print("Mutação em ");
                     System.out.print(" filho " + filho);
-                    System.out.println(" alelo " + alelo);
+                    System.out.println(" alelo " + alelo);*/
                     if(filhos.get(filho).itens[alelo] == 1)
                         filhos.get(filho).itens[alelo] = 0;
                     else
@@ -190,54 +191,57 @@ public class MochilaSolver {
          * Eu sei q no slide fala pra retornar algo desse método, mas eu achei melhor colocar isso em outro método.
          */
         for (int index = 0; index < n_individuos; index++)
-            filhos.get(index).calculaFitness(mochila);
-
-        for(int index = 0; index < n_individuos; index++)
+            individuos.get(index).calculaFitness(mochila);
+        
+        for(int geracoes=0; geracoes<100; geracoes++)
         {
-            int fitness_pai = individuos.get(index).fitness;
-            int fitness_filho = filhos.get(index).fitness;
-
-            // Armazenar os escolhidos na Lista de Individuos, pode ser em outro lugar tbm
-            if(fitness_filho > fitness_pai)
-                for (int i = 0; i < mochila.n_elementos; i++)
-                    individuos.get(index).itens[i] = filhos.get(index).itens[i];
-
+            this.crossover();
+            this.mutation();
+            
+            //Recomendação do NetBeans pra escrever assim
+            this.filhos.forEach((each) -> {
+                each.calculaFitness(mochila);
+            });
+            
+            //Pega todo mundo, penaliza/repara, dá sort e escolhe os n_individuos primeiros
+            List<Mochila> tmp = this.individuos;
+            tmp.addAll(this.filhos);
+            for(Mochila each: tmp)
+                if(each.peso>this.capacidade)
+                    this.penalizaIndividuo(each);
+            //Again, n sei direito como funciona, mas acho q funciona
+            tmp.sort((Mochila m1, Mochila m2) -> m2.fitness - m1.fitness);
+            while(tmp.size()>n_individuos)
+                tmp.remove(tmp.size()-1); //remove o ultimo
+            this.individuos=tmp;
+            
+            best_fitness=individuos.get(0).fitness;
+            int[] gf = {geracoes, best_fitness};
+            genFit.add(gf);
         }
-
     }
     
     public Mochila getBestMochila()
     {
         /** Retorna a melhor mochila.
-         * Procura a mochila com best_fitness e retorna.
+         * Primeira da lista de indivíduos
          */
-        Mochila best_mochila;
-        best_mochila = new Mochila(42);
-        int best = individuos.get(0).fitness; // Não sabia se queria atualizar a best_mochila através desta func, n entendi direito
-        for(int index = 1; index < n_individuos; index++)
-        {
-            if(individuos.get(index).fitness > best)
-            {
-                best = individuos.get(index).fitness;
-                best_mochila = individuos.get(index);
-            }
-        }
-        return best_mochila;
+        return individuos.get(0);
     }
     
     private void penalizaIndividuo(Mochila individuo)
     {
         /** Diminui o fitness do indivíduo se passar da capacidade máxima.
-         * Tem q pensar em alguma forma de penalizar.
-         * Meio q qualquer coisa serve mas talvez influencie em quão rapido a gente converge numa solução.
+         * Penaliza com o cubo da diferença entre o peso e a capacidade máxima
          */
-        //Talvez em penalizar retirando 1 no fitness para cada 1 que ultrapasse o limite máximo(?)
+        individuo.fitness=(int) (individuo.valor-Math.pow((individuo.peso-capacidade),3));
     }
     
     private void reparaIndividuo(Mochila individuo)
     {
         /** Repara o indivíduo que passou da capacidade para ser factível.
-         * De volta, tem q pensar em que item tirar da mochila.
+         *  
          */
+        
     }
 }
