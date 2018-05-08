@@ -17,8 +17,9 @@ public class MochilaSolver {
     private int best_fitness; //Pra achar a melhor mochila mais rápido
     private int capacidade;
     private int n_individuos;
+    private boolean penaliza;
 
-    public MochilaSolver(MochilaItems m, int c, int n)
+    public MochilaSolver(MochilaItems m, int c, int n, boolean p)
     {
         this.mochila=m;
         
@@ -36,6 +37,7 @@ public class MochilaSolver {
         this.best_fitness=0;
         this.capacidade=c;
         this.n_individuos=n;
+        this.penaliza=p;
     }
     
     public void crossover() //numero de filhos = numero de individuos
@@ -208,7 +210,12 @@ public class MochilaSolver {
             tmp.addAll(this.filhos);
             for(Mochila each: tmp)
                 if(each.peso>this.capacidade)
-                    this.penalizaIndividuo(each);
+                {
+                    if(this.penaliza)
+                        this.penalizaIndividuo(each);
+                    else
+                        this.reparaIndividuo(each);
+                }
             //Again, n sei direito como funciona, mas acho q funciona
             tmp.sort((Mochila m1, Mochila m2) -> m2.fitness - m1.fitness);
             while(tmp.size()>n_individuos)
@@ -232,16 +239,30 @@ public class MochilaSolver {
     private void penalizaIndividuo(Mochila individuo)
     {
         /** Diminui o fitness do indivíduo se passar da capacidade máxima.
-         * Penaliza com o cubo da diferença entre o peso e a capacidade máxima
+         * Penaliza com duas vezes o cubo da diferença entre o peso e a capacidade máxima
          */
-        individuo.fitness=(int) (individuo.valor-Math.pow((individuo.peso-capacidade),3));
+        individuo.fitness=(int) (individuo.valor-2*Math.pow((individuo.peso-capacidade),3));
     }
     
     private void reparaIndividuo(Mochila individuo)
     {
         /** Repara o indivíduo que passou da capacidade para ser factível.
-         *  
+         *  Retira os itens com a menor razão valor/peso
          */
-        
+        while(individuo.peso>capacidade)
+        {
+            float eficiencia=1000; //Valor/Peso do item
+            int index=0;
+            for(int i=0; i<mochila.n_elementos; i++)
+            {
+                if(individuo.itens[i]==1 && (float)mochila.valores[i]/mochila.pesos[i] < eficiencia)
+                {
+                    eficiencia=(float)mochila.valores[i]/mochila.pesos[i];
+                    index=i;
+                }
+            }
+            individuo.itens[index]=0;
+            individuo.calculaFitness(mochila);
+        }
     }
 }

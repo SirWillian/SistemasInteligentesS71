@@ -13,7 +13,7 @@ import java.util.List;
  * @author WILLIAN e Terumi
  */
 public class Main {
-    boolean first_print=true;
+    static boolean first_print=true;
     
     public static void main(String args[]) {
         int[] pesos = {3,8,12,2,8,4,4,5,1,1,8,6,4,3,3,5,7,3,5,7,4,3,7,2,3,5,4,3,7,19,20,21,11,24,13,17,18,6,15,25,12,19};
@@ -21,29 +21,50 @@ public class Main {
         MochilaItems mochila = new MochilaItems(pesos, valores, 42);
         
         List<Mochila> best_mochilas = new ArrayList<>();
-        int best_fitness=0;
+        int best_fitness=0, n_best_mochilas=0;
         Mochila tmp_best;
+        List<int[]> best_genFit = new ArrayList<>();
         
-        for(int execucoes=0; execucoes<10; execucoes++)
+        for(int execucoes=0; execucoes<1000; execucoes++)
         {
-            MochilaSolver solver = new MochilaSolver(mochila, 113, 42);
+            MochilaSolver solver = new MochilaSolver(mochila, 113, 42, true);
             solver.evolve();
 
             tmp_best=solver.getBestMochila();
             tmp_best.printMochila(mochila);
             if(tmp_best.fitness > best_fitness){
+                n_best_mochilas=1;
                 best_mochilas.clear();
                 best_mochilas.add(tmp_best);
                 best_fitness=tmp_best.fitness;
+                best_genFit=solver.genFit;
             }
             else if (tmp_best.fitness==best_fitness)
-                //Checar se a mochila é repetida
-                best_mochilas.add(tmp_best);
+            {
+                n_best_mochilas++;
+                if(!best_mochilas.contains(tmp_best)) //Devia passar apenas mochilas ótimas novas
+                    best_mochilas.add(tmp_best);
+            }
         }
-        //Escrever no arquivo
+        
+        escreveEmArquivo(null, "Geração x Fitness: ");
+        for(int i=0; i<best_genFit.size(); i++)
+            escreveEmArquivo(best_genFit.get(i), null);
+        escreveEmArquivo(null, "Melhores mochilas: ");
+        int[] n_bm = {n_best_mochilas};
+        escreveEmArquivo(n_bm, null);
+        for(Mochila each: best_mochilas){
+            int[] bm = new int[mochila.n_elementos+3];
+            bm[0]=each.n_itens;
+            bm[1]=each.peso;
+            bm[2]=each.valor;
+            for(int i=3; i<bm.length; i++)
+                bm[i]=each.itens[i-3];
+            escreveEmArquivo(bm, null);
+        }
     }
     
-    public void escreveEmArquivo(int[] parametros, String string){
+    static public void escreveEmArquivo(int[] parametros, String string){
         BufferedWriter bw = null;
         FileWriter fw = null;
         String data;
@@ -54,7 +75,7 @@ public class Main {
             else
             {
                 data=String.valueOf(parametros[0]);
-                for(int i=0; i<parametros.length; i++)
+                for(int i=1; i<parametros.length; i++)
                     data+=","+String.valueOf(parametros[i]);
                 data+=System.getProperty("line.separator");
             }

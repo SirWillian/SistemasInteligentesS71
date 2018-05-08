@@ -55,9 +55,9 @@ public class Mochila {
             if(itens[i]==1)
                 System.out.println("item["+i+"]   " + m.pesos[i] + "     " + m.valores[i]);
         System.out.println("---------------------");
-        System.out.println("Mochila com " + n_itens + "ITENS");
-        System.out.println("Mochila com " + peso + "KG");
-        System.out.println("Mochila com " + valor + "VALOR");
+        System.out.println("Mochila com " + n_itens + " ITENS");
+        System.out.println("Mochila com " + peso + " KG");
+        System.out.println("Mochila com " + valor + " VALOR");
         System.out.println("---------------------");
     }
 }
