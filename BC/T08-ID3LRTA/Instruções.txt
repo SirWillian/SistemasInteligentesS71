@@ -1,0 +1,4 @@
+Abra um prompt de comando no diretório onde o "T08-ID3LRTA.jar" está localizado.
+Use o comando "java -jar T08-ID3LRTA.jar".
+As 100 primeiras execuções são relativas ao aprendizado, as 100 próximas à execução comendo frutas aleatoriamente e as 100 próximas, comendo frutas seguindo a estratégia.
+O arquivo "id3-lrta.txt" contém a pontuação do agente em cada execução após o aprendizado.
